@@ -34,11 +34,6 @@ let s:available_vimproc = globpath(&runtimepath, 'autoload/vimproc.vim') != '' &
 let s:available_es = executable('es.exe')
 
 function! s:source.gather_candidates(args, context)"{{{
-	" 引数文字列がない場合 es.exe は全エントリを表示しようとするので却下
-	if len(a:context.input) == 0
-		return []
-	endif
-	
 	let l:input = substitute(a:context.input, '^\a\+:\zs\*/', '/', '')
 	" use vimproc
 	let l:res = vimproc#system('es' 
