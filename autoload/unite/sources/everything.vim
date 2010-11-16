@@ -1,8 +1,8 @@
 "=============================================================================
 " FILE: everything.vim
-" Last Modified: 2010-11-01
+" Last Modified: 2010-11-16
 " Description: everything のコマンドラインインタフェース(es.exe)を利用し、
-"              NTFSボリュームの全てのファイルを瞬時にUniteから使うためのsource
+"              unite から everything を利用するための source
 " Requirement: everything.exe
 "            : es.exe in $PATH
 " Notes: ディレクトリ等がジャンクションだったりすると everything が検索してくれない
@@ -19,7 +19,10 @@ call unite#set_default('g:unite_source_everything_sort_by_full_path', 0)
 "}}}
 
 function! unite#sources#everything#define()"{{{
-  return s:source
+	if unite#is_win() && s:available_vimproc && s:available_es
+		return s:source
+	endif
+	return []
 endfunction"}}}
 
 let s:source = {
@@ -27,24 +30,17 @@ let s:source = {
 			\ 'is_volatile' : 1,
 			\ 'max_candidates': g:unite_source_everything_limit,
 			\}
-let s:available_vimproc = globpath(&runtimepath, 'autoload/vimproc.vim') != ''
-let s:available_es = unite#is_win() && executable('es.exe')
+let s:available_vimproc = globpath(&runtimepath, 'autoload/vimproc.vim') != '' && vimproc#version() > 0
+let s:available_es = executable('es.exe')
 
 function! s:source.gather_candidates(args, context)"{{{
-
-	" Win32環境でなおかつ es.exe がなかったら空リストを返す
-	if !(s:available_es && s:available_vimproc && vimproc#version() >0)
-		return []
-	endif
-
 	" 引数文字列がない場合 es.exe は全エントリを表示しようとするので却下
 	if len(a:context.input) == 0
 		return []
 	endif
 	
 	let l:input = substitute(a:context.input, '^\a\+:\zs\*/', '/', '')
-
-	" vimproc
+	" use vimproc
 	let l:res = vimproc#system('es' 
 				\ . ' -n ' . g:unite_source_everything_limit
 				\ . (g:unite_source_everything_full_path_search > 0 ? ' -p' : '')
@@ -55,7 +51,7 @@ function! s:source.gather_candidates(args, context)"{{{
 		let l:res = substitute(l:res, '\\', '/', 'g')
 	endif
 	let l:candidates = split(l:res, '\r\n\|\r\|\n')
-	
+
 	let l:candidates_dir = []
 	let l:candidates_file = []
 	for l:entry in l:candidates
