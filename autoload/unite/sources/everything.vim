@@ -9,13 +9,13 @@
 "=============================================================================
 
 " Variables  "{{{
-call unite#set_default('g:unite_source_everything_limit', 50)
+call unite#util#set_default('g:unite_source_everything_limit', 50)
 " search entire path
-call unite#set_default('g:unite_source_everything_full_path_search', 1)
+call unite#util#set_default('g:unite_source_everything_full_path_search', 1)
 " use POSIX regexp
-call unite#set_default('g:unite_source_everything_posix_regexp_search', 0)
+call unite#util#set_default('g:unite_source_everything_posix_regexp_search', 0)
 " sort result by full path string
-call unite#set_default('g:unite_source_everything_sort_by_full_path', 0)
+call unite#util#set_default('g:unite_source_everything_sort_by_full_path', 0)
 "}}}
 
 function! unite#sources#everything#define()"{{{
