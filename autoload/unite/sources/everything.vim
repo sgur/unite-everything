@@ -48,6 +48,11 @@ function! s:source.gather_candidates(args, context)"{{{
 	endif
 	let l:candidates = split(l:res, '\r\n\|\r\|\n')
 
+	" if g:unite_source_file_ignore_pattern is set, use it to filter pattern
+	if exists('g:unite_source_file_ignore_pattern') && g:unite_source_file_ignore_pattern != ''
+		call filter(l:candidates, 'v:val !~ ' . string(g:unite_source_file_ignore_pattern))
+	endif
+
 	let l:candidates_dir = []
 	let l:candidates_file = []
 	for l:entry in l:candidates
