@@ -9,9 +9,9 @@
 "=============================================================================
 
 " Variables  "{{{
-call unite#util#set_default('g:unite_source_everything_limit', 50)
+call unite#util#set_default('g:unite_source_everything_limit', 100)
 " search entire path
-call unite#util#set_default('g:unite_source_everything_full_path_search', 1)
+call unite#util#set_default('g:unite_source_everything_full_path_search', 0)
 " use POSIX regexp
 call unite#util#set_default('g:unite_source_everything_posix_regexp_search', 0)
 " sort result by full path string
@@ -26,10 +26,10 @@ function! unite#sources#everything#define()"{{{
 endfunction"}}}
 
 let s:source = {
-			\ 'name' : 'everything',
-			\ 'is_volatile' : 1,
-			\ 'max_candidates': g:unite_source_everything_limit,
-			\}
+			\ 'name'           : 'everything',
+			\ 'is_volatile'    : 1,
+			\ 'max_candidates' : 30,
+			\ }
 let s:available_vimproc = globpath(&runtimepath, 'autoload/vimproc.vim') != '' && vimproc#version() > 0
 let s:available_es = executable('es.exe')
 
