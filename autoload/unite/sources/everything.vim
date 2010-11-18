@@ -42,6 +42,7 @@ function! s:source.gather_candidates(args, context)"{{{
 				\ . (g:unite_source_everything_posix_regexp_search > 0 ? ' -r' : '')
 				\ . (g:unite_source_everything_sort_by_full_path > 0 ? ' -s' : '')
 				\ . ' ' . l:input)
+	" if setting shellslash, fix path separator
 	if &shellslash
 		let l:res = substitute(l:res, '\\', '/', 'g')
 	endif
@@ -50,8 +51,11 @@ function! s:source.gather_candidates(args, context)"{{{
 	let l:candidates_dir = []
 	let l:candidates_file = []
 	for l:entry in l:candidates
-		let l:dict = { 'word' : l:entry, 'abbr' : l:entry, 'source' : 'everything',
-					\ 'action__path' : l:entry,
+		let l:dict = {
+					\ 'word'              : l:entry,
+					\ 'abbr'              : l:entry,
+					\ 'source'            : 'everything',
+					\ 'action__path'      : l:entry,
 					\ 'action__directory' : unite#path2directory(l:entry),
 					\	}
 		if isdirectory(l:entry)
