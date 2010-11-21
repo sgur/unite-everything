@@ -19,7 +19,7 @@ call unite#util#set_default('g:unite_source_everything_sort_by_full_path', 0)
 "}}}
 
 function! unite#sources#everything#define()"{{{
-	if unite#is_win() && s:available_vimproc && s:available_es
+	if unite#is_win() && s:available_es
 		return s:source
 	endif
 	return []
@@ -30,13 +30,12 @@ let s:source = {
 			\ 'is_volatile'    : 1,
 			\ 'max_candidates' : 30,
 			\ }
-let s:available_vimproc = globpath(&runtimepath, 'autoload/vimproc.vim') != '' && vimproc#version() > 0
 let s:available_es = executable('es.exe')
 
 function! s:source.gather_candidates(args, context)"{{{
 	let l:input = substitute(a:context.input, '^\a\+:\zs\*/', '/', '')
 	" use vimproc
-	let l:res = vimproc#system('es' 
+	let l:res = unite#util#system('es' 
 				\ . ' -n ' . g:unite_source_everything_limit
 				\ . (g:unite_source_everything_full_path_search > 0 ? ' -p' : '')
 				\ . (g:unite_source_everything_posix_regexp_search > 0 ? ' -r' : '')
