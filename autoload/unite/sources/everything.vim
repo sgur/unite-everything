@@ -1,6 +1,6 @@
 "=============================================================================
 " FILE: everything.vim
-" Last Modified: 2010-11-16
+" Last Modified: 2010-11-21
 " Description: everything のコマンドラインインタフェース(es.exe)を利用し、
 "              unite から everything を利用するための source
 " Requirement: everything.exe
@@ -34,7 +34,7 @@ let s:available_es = executable('es.exe')
 
 function! s:source.gather_candidates(args, context)"{{{
 	let l:input = substitute(a:context.input, '^\a\+:\zs\*/', '/', '')
-	" use vimproc
+	" exec es.exe to list candidates
 	let l:res = unite#util#system('es' 
 				\ . ' -n ' . g:unite_source_everything_limit
 				\ . (g:unite_source_everything_full_path_search > 0 ? ' -p' : '')
