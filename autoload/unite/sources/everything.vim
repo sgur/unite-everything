@@ -29,6 +29,7 @@ let s:source = {
 			\ 'name'           : 'everything',
 			\ 'is_volatile'    : 1,
 			\ 'max_candidates' : 30,
+			\ 'required_pattern_length' : 3,
 			\ }
 let s:available_es = executable('es.exe')
 
