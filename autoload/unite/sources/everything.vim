@@ -18,12 +18,7 @@ call unite#util#set_default('g:unite_source_everything_posix_regexp_search', 0)
 call unite#util#set_default('g:unite_source_everything_sort_by_full_path', 0)
 "}}}
 
-function! unite#sources#everything#define()"{{{
-	if unite#is_win() && s:available_es
-		return s:source
-	endif
-	return []
-endfunction"}}}
+let s:available_es = executable('es.exe')
 
 let s:source = {
 			\ 'name'           : 'everything',
@@ -31,21 +26,24 @@ let s:source = {
 			\ 'max_candidates' : 30,
 			\ 'required_pattern_length' : 3,
 			\ }
-let s:available_es = executable('es.exe')
 
-function! s:source.gather_candidates(args, context)"{{{
+function! unite#sources#everything#define()"{{{
+	if unite#util#is_win() && s:available_es
+		return s:source
+	endif
+	return []
+endfunction"}}}
+
+function! s:source.change_candidates(args, context)"{{{
 	let l:input = substitute(a:context.input, '^\a\+:\zs\*/', '/', '')
 	" exec es.exe to list candidates
-	let l:res = unite#util#system('es' 
+	let l:res = unite#util#substitute_path_separator(
+				\ unite#util#system('es'
 				\ . ' -n ' . g:unite_source_everything_limit
 				\ . (g:unite_source_everything_full_path_search > 0 ? ' -p' : '')
 				\ . (g:unite_source_everything_posix_regexp_search > 0 ? ' -r' : '')
 				\ . (g:unite_source_everything_sort_by_full_path > 0 ? ' -s' : '')
-				\ . ' ' . l:input)
-	" if setting shellslash, fix path separator
-	if &shellslash
-		let l:res = substitute(l:res, '\\', '/', 'g')
-	endif
+				\ . ' ' . l:input))
 	let l:candidates = split(l:res, '\r\n\|\r\|\n')
 
 	" if g:unite_source_file_ignore_pattern is set, use it to filter pattern
@@ -61,7 +59,7 @@ function! s:source.gather_candidates(args, context)"{{{
 					\ 'abbr'              : l:entry,
 					\ 'source'            : 'everything',
 					\ 'action__path'      : l:entry,
-					\ 'action__directory' : unite#path2directory(l:entry),
+					\ 'action__directory' : unite#util#path2directory(l:entry),
 					\	}
 		if isdirectory(l:entry)
 			if l:entry !~ '^\%(/\|\a\+:/\)$'
@@ -75,7 +73,7 @@ function! s:source.gather_candidates(args, context)"{{{
 		endif
 	endfor
 
-	return l:candidates_dir + l:candidates_file
+	return l:candidates_file + l:candidates_dir
 endfunction"}}}
 
 " vim: foldmethod=marker
