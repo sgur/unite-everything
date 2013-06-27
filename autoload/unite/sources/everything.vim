@@ -108,15 +108,11 @@ function! s:source_async.async_gather_candidates(args, context) "{{{
 
   let res = []
   if has_key(a:context, 'source__subproc')
-    while !a:context.source__subproc.stdout.eof
+    if !a:context.source__subproc.stdout.eof
       let res = a:context.source__subproc.stdout.read_lines()
-      if !empty(res)
-        break
-      endif
-    endwhile
+    endif
     call map(res, 'iconv(v:val, &termencoding, &encoding)')
   endif
-
   let candidates = map(res, 'unite#util#substitute_path_separator(v:val)')
 
   if exists('g:unite_source_file_ignore_pattern') && g:unite_source_file_ignore_pattern != ''
