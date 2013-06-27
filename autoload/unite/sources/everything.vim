@@ -1,6 +1,6 @@
 "=============================================================================
 " FILE: everything.vim
-" Last Modified: 2010-11-21
+" Last Modified: 2013-06-28
 " Description: everything のコマンドラインインタフェース(es.exe)を利用し、
 "              unite から everything を利用するための source
 " Requirement: everything.exe
@@ -16,6 +16,8 @@ call unite#util#set_default('g:unite_source_everything_full_path_search', 0)
 call unite#util#set_default('g:unite_source_everything_posix_regexp_search', 0)
 " sort result by full path string
 call unite#util#set_default('g:unite_source_everything_sort_by_full_path', 0)
+" case sensitive search
+call unite#util#set_default('g:unite_source_everything_case_sensitive_search', 0)
 "}}}
 
 let s:available_es = executable('es.exe')
@@ -40,6 +42,7 @@ function! s:source.change_candidates(args, context)"{{{
   let l:res = unite#util#substitute_path_separator(
         \ unite#util#system('es'
         \ . ' -n ' . g:unite_source_everything_limit
+        \ . (g:unite_source_everything_case_sensitive_search > 0 ? ' -i' : '')
         \ . (g:unite_source_everything_full_path_search > 0 ? ' -p' : '')
         \ . (g:unite_source_everything_posix_regexp_search > 0 ? ' -r' : '')
         \ . (g:unite_source_everything_sort_by_full_path > 0 ? ' -s' : '')
