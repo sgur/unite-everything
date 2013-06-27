@@ -39,7 +39,7 @@ let s:source =
 let s:source_async =
       \ { 'name'                    : 'everything/async'
       \ , 'description'             : 'asynchronous candidates from everything'
-      \ , 'max_candidates'          : 30
+      \ , 'max_candidates'          : 1000
       \ , 'required_pattern_length' : 1
       \ , 'ignore_pattern'          : g:unite_source_everything_ignore_pattern
       \ , 'hooks' : {}
