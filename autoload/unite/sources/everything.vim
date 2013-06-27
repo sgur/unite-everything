@@ -29,14 +29,14 @@ let s:source = {
       \ 'required_pattern_length' : 3,
       \ }
 
-function! unite#sources#everything#define()"{{{
+function! unite#sources#everything#define() "{{{
   if unite#util#is_win() && s:available_es
     return s:source
   endif
   return []
-endfunction"}}}
+endfunction "}}}
 
-function! s:source.change_candidates(args, context)"{{{
+function! s:source.change_candidates(args, context) "{{{
   let l:input = substitute(a:context.input, '^\a\+:\zs\*/', '/', '')
   " exec es.exe to list candidates
   let l:res = unite#util#substitute_path_separator(
@@ -77,6 +77,6 @@ function! s:source.change_candidates(args, context)"{{{
   endfor
 
   return l:candidates_file + l:candidates_dir
-endfunction"}}}
+endfunction "}}}
 
 " vim: foldmethod=marker
