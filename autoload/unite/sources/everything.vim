@@ -20,6 +20,9 @@ call unite#util#set_default('g:unite_source_everything_sort_by_full_path', 0)
 call unite#util#set_default('g:unite_source_everything_case_sensitive_search', 0)
 " es.exe cmd path
 call unite#util#set_default('g:unite_source_everything_cmd_path', 'es.exe')
+" file ignore pattern
+call unite#util#set_default('g:unite_source_everything_ignore_pattern',
+      \'\%(^\|/\)\.\.\?$\|\~$\|\.\%(o|exe|dll|bak|DS_Store|pyc|zwc|sw[po]\)$')
 "}}}
 
 let s:available_es = executable(g:unite_source_everything_cmd_path)
@@ -29,12 +32,14 @@ let s:source =
       \ , 'is_volatile'             : 1
       \ , 'max_candidates'          : 30
       \ , 'required_pattern_length' : 3
+      \ , 'ignore_pattern'          : g:unite_source_everything_ignore_pattern
       \ }
 
 let s:source_async =
       \ { 'name'                    : 'everything/async'
       \ , 'max_candidates'          : 30
       \ , 'required_pattern_length' : 1
+      \ , 'ignore_pattern'          : g:unite_source_everything_ignore_pattern
       \ , 'hooks' : {}
       \ }
 
@@ -55,11 +60,6 @@ function! s:source.change_candidates(args, context) "{{{
   let l:res = unite#util#substitute_path_separator(
         \ unite#util#system(s:es_command_line(input)))
   let l:candidates = split(l:res, '\r\n\|\r\|\n')
-
-  " if g:unite_source_file_ignore_pattern is set, use it to filter pattern
-  if exists('g:unite_source_file_ignore_pattern') && g:unite_source_file_ignore_pattern != ''
-    call filter(l:candidates, 'v:val !~ ' . string(g:unite_source_file_ignore_pattern))
-  endif
 
   return s:build_candidates(candidates)
 endfunction "}}}
@@ -100,10 +100,6 @@ function! s:source_async.async_gather_candidates(args, context) "{{{
     call map(res, 'iconv(v:val, &termencoding, &encoding)')
   endif
   let candidates = map(res, 'unite#util#substitute_path_separator(v:val)')
-
-  if exists('g:unite_source_file_ignore_pattern') && g:unite_source_file_ignore_pattern != ''
-    call filter(candidates, 'v:val !~ ' . string(g:unite_source_file_ignore_pattern))
-  endif
 
   return s:build_candidates(candidates)
 endfunction "}}}
