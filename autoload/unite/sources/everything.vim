@@ -53,13 +53,7 @@ function! s:source.change_candidates(args, context) "{{{
   let l:input = substitute(a:context.input, '^\a\+:\zs\*/', '/', '')
   " exec es.exe to list candidates
   let l:res = unite#util#substitute_path_separator(
-        \ unite#util#system(g:unite_source_everything_cmd_path
-        \ . ' -n ' . g:unite_source_everything_limit
-        \ . (g:unite_source_everything_case_sensitive_search > 0 ? ' -i' : '')
-        \ . (g:unite_source_everything_full_path_search > 0 ? ' -p' : '')
-        \ . (g:unite_source_everything_posix_regexp_search > 0 ? ' -r' : '')
-        \ . (g:unite_source_everything_sort_by_full_path > 0 ? ' -s' : '')
-        \ . ' ' . l:input))
+        \ unite#util#system(s:es_command_line(input)))
   let l:candidates = split(l:res, '\r\n\|\r\|\n')
 
   " if g:unite_source_file_ignore_pattern is set, use it to filter pattern
@@ -95,14 +89,7 @@ function! s:source_async.async_gather_candidates(args, context) "{{{
       call unite#force_redraw()
     endif
 
-    let a:context.source__subproc =
-          \ vimproc#popen3(g:unite_source_everything_cmd_path
-          \ . ' -n ' . g:unite_source_everything_limit
-          \ . (g:unite_source_everything_case_sensitive_search > 0 ? ' -i' : '')
-          \ . (g:unite_source_everything_full_path_search > 0 ? ' -p' : '')
-          \ . (g:unite_source_everything_posix_regexp_search > 0 ? ' -r' : '')
-          \ . (g:unite_source_everything_sort_by_full_path > 0 ? ' -s' : '')
-          \ . ' ' . iconv(input, &encoding, &termencoding))
+    let a:context.source__subproc = vimproc#popen3(s:es_command_line(input))
   endif
 
   let res = []
@@ -120,6 +107,16 @@ function! s:source_async.async_gather_candidates(args, context) "{{{
 
   return s:build_candidates(candidates)
 endfunction "}}}
+
+function! s:es_command_line(input)
+  return g:unite_source_everything_cmd_path
+        \ . ' -n ' . g:unite_source_everything_limit
+        \ . (g:unite_source_everything_case_sensitive_search > 0 ? ' -i' : '')
+        \ . (g:unite_source_everything_full_path_search > 0 ? ' -p' : '')
+        \ . (g:unite_source_everything_posix_regexp_search > 0 ? ' -r' : '')
+        \ . (g:unite_source_everything_sort_by_full_path > 0 ? ' -s' : '')
+        \ . ' ' . iconv(a:input, &encoding, &termencoding)
+endfunction
 
 function! s:build_candidates(candidate_list) "{{{
   let dir_list = []
