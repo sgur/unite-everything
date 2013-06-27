@@ -25,14 +25,15 @@ Requirements:
 
 - [unite.vim](https://github.com/Shougo/unite.vim/)
 - [vimproc.vim](https://github.com/Shougo/vimproc.vim/)
-- [Everything](http://www.voidtools.com/download.php)
-  Version 1.3系 Beta版の利用をお勧めします。
+- [Everything](http://www.voidtools.com/download.php) Version 1.3系 Beta版の利用をお勧めします。
 - [es.exe](http://www.voidtools.com/download.php)
 
 Install:
 --------
 
 `unite.vim`, `vimproc.vim` については、利用できるようにしておいてください。
+
+`Everything` については、`es.exe` からの利用を簡単にするため、サービスを有効にしてインストールしてください。
 
 `es.exe` は、パスの通ったフォルダに保存するか、保存先のフォルダを
 `g:unite_source_everything_cmd_path` に設定してください。
