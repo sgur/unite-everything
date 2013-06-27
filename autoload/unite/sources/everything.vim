@@ -29,6 +29,7 @@ let s:available_es = executable(g:unite_source_everything_cmd_path)
 
 let s:source =
       \ { 'name'                    : 'everything'
+      \ , 'description'             : 'candidates from everything'
       \ , 'is_volatile'             : 1
       \ , 'max_candidates'          : 30
       \ , 'required_pattern_length' : 3
@@ -37,6 +38,7 @@ let s:source =
 
 let s:source_async =
       \ { 'name'                    : 'everything/async'
+      \ , 'description'             : 'asynchronous candidates from everything'
       \ , 'max_candidates'          : 30
       \ , 'required_pattern_length' : 1
       \ , 'ignore_pattern'          : g:unite_source_everything_ignore_pattern
