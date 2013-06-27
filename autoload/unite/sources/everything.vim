@@ -18,9 +18,11 @@ call unite#util#set_default('g:unite_source_everything_posix_regexp_search', 0)
 call unite#util#set_default('g:unite_source_everything_sort_by_full_path', 0)
 " case sensitive search
 call unite#util#set_default('g:unite_source_everything_case_sensitive_search', 0)
+" es.exe cmd path
+call unite#util#set_default('g:unite_source_everything_cmd_path', 'es.exe')
 "}}}
 
-let s:available_es = executable('es.exe')
+let s:available_es = executable(g:unite_source_everything_cmd_path)
 
 let s:source =
       \ { 'name'                    : 'everything'
@@ -51,7 +53,7 @@ function! s:source.change_candidates(args, context) "{{{
   let l:input = substitute(a:context.input, '^\a\+:\zs\*/', '/', '')
   " exec es.exe to list candidates
   let l:res = unite#util#substitute_path_separator(
-        \ unite#util#system('es'
+        \ unite#util#system(g:unite_source_everything_cmd_path
         \ . ' -n ' . g:unite_source_everything_limit
         \ . (g:unite_source_everything_case_sensitive_search > 0 ? ' -i' : '')
         \ . (g:unite_source_everything_full_path_search > 0 ? ' -p' : '')
@@ -95,7 +97,7 @@ function! s:source_async.async_gather_candidates(args, context) "{{{
 
     echomsg 'QUERY' input
     let a:context.source__subproc =
-          \ vimproc#popen3('es'
+          \ vimproc#popen3(g:unite_source_everything_cmd_path
           \ . ' -n ' . g:unite_source_everything_limit
           \ . (g:unite_source_everything_case_sensitive_search > 0 ? ' -i' : '')
           \ . (g:unite_source_everything_full_path_search > 0 ? ' -p' : '')
