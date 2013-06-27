@@ -57,11 +57,11 @@ function! unite#sources#everything#define() "{{{
 endfunction "}}}
 
 function! s:source.change_candidates(args, context) "{{{
-  let l:input = substitute(a:context.input, '^\a\+:\zs\*/', '/', '')
+  let input = substitute(a:context.input, '^\a\+:\zs\*/', '/', '')
   " exec es.exe to list candidates
-  let l:res = unite#util#substitute_path_separator(
+  let res = unite#util#substitute_path_separator(
         \ unite#util#system(s:es_command_line(input)))
-  let l:candidates = split(l:res, '\r\n\|\r\|\n')
+  let candidates = split(res, '\r\n\|\r\|\n')
 
   return s:build_candidates(candidates)
 endfunction "}}}
