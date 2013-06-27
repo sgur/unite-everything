@@ -95,7 +95,6 @@ function! s:source_async.async_gather_candidates(args, context) "{{{
       call unite#force_redraw()
     endif
 
-    echomsg 'QUERY' input
     let a:context.source__subproc =
           \ vimproc#popen3(g:unite_source_everything_cmd_path
           \ . ' -n ' . g:unite_source_everything_limit
