@@ -43,7 +43,7 @@ call unite#util#set_default('g:unite_source_everything_case_sensitive_search', 0
 call unite#util#set_default('g:unite_source_everything_cmd_path', 'es.exe')
 " file ignore pattern
 call unite#util#set_default('g:unite_source_everything_ignore_pattern',
-      \'\%(^\|/\)\.\.\?$\|\~$\|\.\%(o|exe|dll|bak|DS_Store|pyc|zwc|sw[po]\)$')
+      \'\%(^\|/\)\.\.\?$\|\~$\|\.\%(git\|hg\|svn\)\|\.\%(o\|exe\|dll\|bak\|DS_Store\|pyc\|zwc\|sw[po]\)$')
 "}}}
 
 let s:available_es = executable(g:unite_source_everything_cmd_path)
