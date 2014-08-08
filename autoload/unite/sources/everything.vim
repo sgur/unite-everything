@@ -1,7 +1,7 @@
 "=============================================================================
 " FILE: autoload/unite/sources/everything.vim
 " AUTHOR: sgur <sgurrr+vim@gmail.com>
-" Last Modified: August 07, 2014
+" Last Modified: August 08, 2014
 " Description: everything のコマンドラインインタフェース(es.exe)を利用し、
 "              unite から everything を利用するための source
 " Requirement: everything.exe
@@ -57,6 +57,7 @@ let s:source =
       \ , 'max_candidates'          : 30
       \ , 'required_pattern_length' : 3
       \ , 'ignore_pattern'          : g:unite_source_everything_ignore_pattern
+      \ , 'hooks' : {}
       \ }
 
 let s:source_async =
@@ -88,6 +89,14 @@ function! s:source.change_candidates(args, context) "{{{
 
   return s:build_candidates(candidates)
 endfunction "}}}
+
+function! s:source.hooks.on_init(args, context)
+  call s:on_init(s:source.name)
+endfunction
+
+function! s:source_async.hooks.on_init(args, context)
+  call s:on_init(s:source_async.name)
+endfunction
 
 function! s:source_async.hooks.on_close(args, context) "{{{
   while !a:context.source__subproc.stdout.eof
@@ -164,5 +173,23 @@ function! s:build_candidates(candidate_list) "{{{
 
   return file_list + dir_list
 endfunction "}}}
+
+function! s:check_everything_connection()
+  let cmd = g:unite_source_everything_cmd_path . ' -n 0'
+  if unite#util#has_vimproc()
+    call unite#util#system(cmd)
+    let result = unite#util#get_last_status()
+  else
+    silent call system(cmd)
+    let result = v:shell_error
+  endif
+  return result
+endfunction
+
+function! s:on_init(name)
+  if s:check_everything_connection()
+    call unite#print_source_error('Unable to connect to everything', a:name)
+  endif
+endfunction
 
 " vim: foldmethod=marker
