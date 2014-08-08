@@ -1,7 +1,7 @@
 "=============================================================================
 " FILE: autoload/unite/sources/everything.vim
 " AUTHOR: sgur <sgurrr+vim@gmail.com>
-" Last Modified: 2013-06-28
+" Last Modified: August 07, 2014
 " Description: everything のコマンドラインインタフェース(es.exe)を利用し、
 "              unite から everything を利用するための source
 " Requirement: everything.exe
@@ -44,6 +44,8 @@ call unite#util#set_default('g:unite_source_everything_cmd_path', 'es.exe')
 " file ignore pattern
 call unite#util#set_default('g:unite_source_everything_ignore_pattern',
       \'\%(^\|/\)\.\.\?$\|\~$\|\.\%(git\|hg\|svn\)\|\.\%(o\|exe\|dll\|bak\|DS_Store\|pyc\|zwc\|sw[po]\)$')
+" minimum pattern length for asynchronous
+call unite#util#set_default('g:unite_source_everything_async_minimum_length', 3)
 "}}}
 
 let s:available_es = executable(g:unite_source_everything_cmd_path)
@@ -61,7 +63,7 @@ let s:source_async =
       \ { 'name'                    : 'everything/async'
       \ , 'description'             : 'asynchronous candidates from everything'
       \ , 'max_candidates'          : 1000
-      \ , 'required_pattern_length' : 1
+      \ , 'required_pattern_length' : g:unite_source_everything_async_minimum_length
       \ , 'ignore_pattern'          : g:unite_source_everything_ignore_pattern
       \ , 'hooks' : {}
       \ }
