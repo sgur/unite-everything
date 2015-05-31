@@ -82,9 +82,10 @@ endfunction "}}}
 
 function! s:source.change_candidates(args, context) "{{{
   let input = substitute(a:context.input, '^\a\+:\zs\*/', '/', '')
+  let path = substitute(a:context.path, '/', '\\\\', 'g')
   " exec es.exe to list candidates
   let res = unite#util#substitute_path_separator(
-        \ unite#util#system(s:es_command_line(input)))
+        \ unite#util#system(s:es_command_line(input, path)))
   let candidates = split(res, '\r\n\|\r\|\n')
 
   return s:build_candidates(candidates)
@@ -107,6 +108,7 @@ endfunction "}}}
 
 function! s:source_async.async_gather_candidates(args, context) "{{{
   let input = substitute(a:context.input, '^\a\+:\zs\*/', '/', '')
+  let path = substitute(a:context.path, '/', '\\\\', 'g')
 
   if !has_key(a:context, 'source__last_input') || a:context.source__last_input != input
     let a:context.source__last_input = input
@@ -123,7 +125,7 @@ function! s:source_async.async_gather_candidates(args, context) "{{{
       call unite#force_redraw()
     endif
 
-    let a:context.source__subproc = vimproc#popen3(s:es_command_line(input))
+    let a:context.source__subproc = vimproc#popen3(s:es_command_line(input, path))
   endif
 
   let res = []
@@ -138,7 +140,7 @@ function! s:source_async.async_gather_candidates(args, context) "{{{
   return s:build_candidates(candidates)
 endfunction "}}}
 
-function! s:es_command_line(input)
+function! s:es_command_line(input, path)
   return g:unite_source_everything_cmd_path
         \ . ' -n ' . g:unite_source_everything_limit
         \ . (g:unite_source_everything_case_sensitive_search > 0 ? ' -i' : '')
@@ -146,6 +148,8 @@ function! s:es_command_line(input)
         \ . (g:unite_source_everything_posix_regexp_search > 0 ? ' -r' : '')
         \ . (g:unite_source_everything_sort_by_full_path > 0 ? ' -s' : '')
         \ . ' ' . iconv(a:input, &encoding, &termencoding)
+        \ . ' ' . iconv(a:path, &encoding, &termencoding)
+  return cline
 endfunction
 
 function! s:build_candidates(candidate_list) "{{{
