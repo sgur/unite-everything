@@ -54,7 +54,7 @@ let s:source =
       \ { 'name'                    : 'everything'
       \ , 'description'             : 'candidates from everything'
       \ , 'is_volatile'             : 1
-      \ , 'max_candidates'          : 30
+      \ , 'max_candidates'          : g:unite_source_everything_limit
       \ , 'required_pattern_length' : 3
       \ , 'ignore_pattern'          : g:unite_source_everything_ignore_pattern
       \ , 'hooks' : {}
